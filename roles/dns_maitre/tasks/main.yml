@@ -37,7 +37,8 @@
 - name: changement de l'user root en bind 
   ansible.builtin.file:
     path: /etc/bind
-    state: directory 
+    state: directory
+    recurse: yes
     owner: bind
     group: bind
     
