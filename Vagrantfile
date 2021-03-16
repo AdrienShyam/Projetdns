@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
      chmod -R 600 /home/vagrant/.ssh/authorized_keys
      ", privileged: false
 
-  #  b.vm.provision "shell", path: "provision.sh", args: "client"
+  #  b.vm.provision "shell", path: "provision.sh", args: "promethus"
   end
 end
 
