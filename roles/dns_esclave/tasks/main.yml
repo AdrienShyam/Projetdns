@@ -4,13 +4,6 @@
     name: bind9
     update_cache: yes
 
-- name: changement de l'user root en bind 
-  ansible.builtin.file:
-    path: /etc/bind
-    state: directory 
-    owner: bind
-    group: bind
-
 - name: ajoute de named.conf
   template:
     src: "named.conf.j2"
@@ -25,6 +18,13 @@
   template:
     src: "resolv.conf.j2"
     dest: "/etc/resolv.conf"
+    
+- name: changement de l'user root en bind 
+  ansible.builtin.file:
+    path: /etc/bind
+    state: directory 
+    owner: bind
+    group: bind
     
 - name: bind9 restart
   ansible.builtin.service:
