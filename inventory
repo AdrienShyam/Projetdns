@@ -1,0 +1,15 @@
+all:
+  hosts:
+    client:
+      ansible_host: 10.0.0.4
+  children:
+    master:
+      hosts:
+        dns_maitre:
+          ansible_host: 10.0.0.2          
+    slave:
+      hosts:
+        dns_esclave:
+          ansible_host: 10.0.0.3
+          
+  

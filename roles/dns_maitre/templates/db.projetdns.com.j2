@@ -1,0 +1,15 @@
+$TTL 10800
+$ORIGIN projetdns.com.
+@	IN SOA dns.projetdns.com. root.projetdns.com. (
+	2021012601 ; # Numéro de série
+	3h ; # temps de rafraichissement
+	1h ; # temps entre les essais
+	1w ; # temps d'expiration
+	1h) ; # valeur TTL minimum
+@	IN NS dns.projetdns.com.
+@   IN NS dnsesclave.projetdns.com.
+
+; On ajoute ensuite les enregistrements DNS
+{% for record in records %} 
+{{record.name}} IN    A {{record.ip}}
+{% endfor %}

@@ -1,0 +1,23 @@
+$TTL 10800
+$ORIGIN 0.0.10.in-addr.arpa.
+@	IN SOA dns.projetdns.com. root.projetdns.com. (
+	2021012601; # Numéro de série
+	3h; # temps de rafraichissement
+	1h; # temps entre les essais
+	1w; # temps d'expiration
+	1h); # valeur TTL minimum
+
+@	IN NS dns.projetdns.com.
+@   IN NS dnsesclave.projetdns.com.
+@   IN PTR    projetdns.com.
+
+
+{% for record in records %} 
+{{record.name}} IN    A {{record.ip}}
+{% endfor %}
+
+;Traduction de l'adresse IP en nom d'hôte
+{% for record_inv in records_inv %} 
+{{record_inv.name}} IN 		PTR {{record_inv.ip}}
+{% endfor %}
+

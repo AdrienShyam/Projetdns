@@ -1,0 +1,14 @@
+{% for zone in zones %}
+
+zone "{{ zone.name_zone }}" {
+           type slave;
+           file "/etc/bind/db.{{ zone.name_zone }}";
+           masters { {{ zone.ip }}; };
+           #notify yes;
+           #allow-transfer { {{ zone.ip }}; };
+           allow-update { key rndc-key; };
+           };
+
+{% endfor %}
+
+

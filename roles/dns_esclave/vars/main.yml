@@ -1,0 +1,7 @@
+---
+# le noms des zones et ip 
+zones:
+  - { 'name_zone': projetdns.com , 'ip': 10.0.0.2 }
+  - { 'name_zone': 0.0.10.in-addr.arpa , 'ip': 10.0.0.2 }
+
+...

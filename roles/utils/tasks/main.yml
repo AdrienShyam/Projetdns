@@ -1,0 +1,7 @@
+---
+- name: installation de vim et dnsutils
+  apt:
+    pkg:
+    - vim
+    - dnsutils
+...

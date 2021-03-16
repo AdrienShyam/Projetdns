@@ -1,0 +1,18 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: client
+  roles:
+    - utils
+    - client
+    
+- hosts: master
+  roles:
+    - utils
+    - dns_maitre
+
+- hosts: slave
+  roles:
+    - utils
+    - dns_esclave 
+
+...
