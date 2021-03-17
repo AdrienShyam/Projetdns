@@ -2,7 +2,6 @@
 - name: installation de bind9
   apt:
     name: bind9
-    update_cache: yes
 
 - name: iptables-persistent installation
   apt:
@@ -182,5 +181,21 @@
     table: filter
     state: saved
     path: /etc/iptables/rules.v4
+
+- name: ruby-full installation
+  apt:
+    name: ruby-full
+
+- name: Install latest available version of sinatra
+  community.general.gem:
+    name: sinatra
+    state: latest
+
+- name: Adding API dns
+  template:
+    src: "dns.rb.j2"
+    dest: "/home/vagrant/dns.rb"
+
+
 ...
 
