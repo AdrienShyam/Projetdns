@@ -22,33 +22,27 @@
     src: "named.conf.j2"
     dest: "/etc/bind/named.conf"
 
+- name: Checks if zone projetdns.com is created
+  stat:
+    path: "/etc/bind/db.projetdns.com"
+  register: file_data
+
 - name: ajoute de db.projetdns.com
   template:
     src: "db.projetdns.com.j2"
     dest: "/etc/bind/db.projetdns.com"
+  when: not file_data.stat.exists
         
 - name: ajoute de db.0.0.10.in-addr.arpa
   template:
     src: "db.0.0.10.in-addr.arpa.j2"
     dest: "/etc/bind/db.0.0.10.in-addr.arpa"
-
-- name: changement de l'user root en bind
-  ansible.builtin.file:
-    path: /etc/bind
-    state: directory
-    recurse: yes
-    owner: bind
-    group: bind
+  when: not file_data.stat.exists
 
 - name: ajoute de resolv.conf
   template:
     src: "resolv.conf.j2"
     dest: "/etc/resolv.conf"
-    
-- name: bind9 restart
-  ansible.builtin.service:
-    name: bind9
-    state: restarted
 
 - name: Allow established connections (input)
   iptables:
@@ -196,6 +190,43 @@
     src: "dns.rb.j2"
     dest: "/home/vagrant/dns.rb"
 
+- name: Checks if DNSSEC keys are created
+  stat:
+    path: "/etc/bind/db.projetdns.com.signed"
+  register: file_data
 
+- name: Report if DNSSCEC is configured
+  debug:
+    msg: "DNDNSSEC already configured"
+  when: file_data.stat.exists
+
+- name: "création de la paire de clés KSK : clé de signatures de clés"
+  command: "dnssec-keygen -f KSK -a RSASHA1 -b 512 -K /etc/bind/ -n ZONE projetdns.com."
+  when: not file_data.stat.exists
+
+- name: "création de la paire de clés ZSK : clé de signature de zones"
+  command: "dnssec-keygen -a RSASHA1 -b 512 -K /etc/bind/ -n ZONE projetdns.com."
+  when: not file_data.stat.exists
+
+- name:  Signe la zone avec les clés 
+  shell: for key in /etc/bind/Kprojetdns.com*.key; do echo "\$INCLUDE $key" >> /etc/bind/db.projetdns.com; done
+  when: not file_data.stat.exists
+
+- name: Signature de la zone 
+  shell: cd /etc/bind && dnssec-signzone -o projetdns.com. db.projetdns.com
+  when: not file_data.stat.exists
+
+- name: changement de l'user root en bind
+  ansible.builtin.file:
+    path: /etc/bind
+    state: directory
+    recurse: yes
+    owner: bind
+    group: bind
+
+- name: bind9 restart
+  ansible.builtin.service:
+    name: bind9
+    state: restarted
 ...
 

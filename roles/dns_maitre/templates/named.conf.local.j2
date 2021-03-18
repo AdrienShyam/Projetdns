@@ -2,7 +2,7 @@
 
 zone "{{ zone.name_zone }}" {
         type master;
-        file "/etc/bind/db.{{ zone.name_zone }}";
+        file "/etc/bind/db.{{ zone.name_zone }}.signed";
         notify yes;
         allow-transfer { {{ zone.ip }}; };
         allow-update { key rndc-key; };
