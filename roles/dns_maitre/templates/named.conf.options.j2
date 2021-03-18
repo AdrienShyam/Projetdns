@@ -6,5 +6,8 @@ options {
 	listen-on-v6 { any; };
 	version none; 
 	dnssec-enable yes;
+	rrset-order {
+          class IN type A name "www.projetdns.com" order fixed;
+        };
 };
 

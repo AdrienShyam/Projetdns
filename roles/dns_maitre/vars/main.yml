@@ -1,14 +1,16 @@
 ---
-# le noms des zones et ip
-zones:
-  - { 'name_zone': projetdns.com , 'ip': 10.0.0.3 }
-  - { 'name_zone': 0.0.10.in-addr.arpa , 'ip': 10.0.0.3 }
-
 # les enregistements et leurs ip  
 records:
-  - { 'name': dns , 'ip': 10.0.0.2 }
   - { 'name': pc , 'ip': 10.0.0.1 }
-  - { 'name': dnsesclave , 'ip': 10.0.0.3 }
+  - { 'name': dnsesclave , 'ip': 10.0.0.3 }  
+  - { 'name': dnsesclave-roundrobind , 'ip': 10.0.0.6 }
+
+# les enregistement robind et leurs ip
+records2:
+  - { 'name2': dns.projetdns.com. , 'ip2': 10.0.0.2 }
+  - { 'name2': dns.projetdns.com. , 'ip2': 10.0.0.3 }  
+  - { 'name2': dns.projetdns.com. , 'ip2': 10.0.0.6 }
+  
 
 # les enregistements pour la zone inverse et leurs ip 
 records_inv:

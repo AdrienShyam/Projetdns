@@ -166,7 +166,7 @@
 - name: Drop all (output)
   iptables:  
     chain: OUTPUT
-    policy: DROP
+    policy: ACCEPT
     comment: Drop all (output)
 
 - name: Save current state of the firewall in system file
@@ -175,20 +175,6 @@
     table: filter
     state: saved
     path: /etc/iptables/rules.v4
-
-- name: ruby-full installation
-  apt:
-    name: ruby-full
-
-- name: Install latest available version of sinatra
-  community.general.gem:
-    name: sinatra
-    state: latest
-
-- name: Adding API dns
-  template:
-    src: "dns.rb.j2"
-    dest: "/home/vagrant/dns.rb"
 
 - name: Checks if DNSSEC keys are created
   stat:
@@ -228,5 +214,24 @@
   ansible.builtin.service:
     name: bind9
     state: restarted
-...
 
+- name: ruby-full installation
+  apt:
+    name: ruby-full
+
+- name: Install latest available version of sinatra
+  community.general.gem:
+    name: sinatra
+    state: latest
+
+- name: Adding API dns
+  template:
+    src: "dns.rb.j2"
+    dest: "/home/vagrant/dns.rb"
+
+#- name: freeze projetdns.com
+#  shell: rndc freeze projetdns.com
+
+#- name: reload projetdns.com
+#  shell: rndc reload projetdns.com
+...

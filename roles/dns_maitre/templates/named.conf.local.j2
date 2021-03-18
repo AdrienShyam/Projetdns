@@ -1,11 +1,16 @@
-{% for zone in zones %} 
-
-zone "{{ zone.name_zone }}" {
+zone "projetdns.com" {
         type master;
-        file "/etc/bind/db.{{ zone.name_zone }}.signed";
+        file "/etc/bind/db.projetdns.com.signed";
         notify yes;
-        allow-transfer { {{ zone.ip }}; };
+        allow-transfer { 10.0.0.3; 10.0.0.6; };
         allow-update { key rndc-key; };
 };
 
-{% endfor %}
+zone "0.0.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.0.0.10.in-addr.arpa";
+        notify yes;
+        allow-transfer { 10.0.0.3; 10.0.0.6; };
+        allow-update { key rndc-key; };
+};
+

@@ -15,4 +15,14 @@
     - utils
     - dns_esclave 
 
+- hosts: slave_robind
+  roles:
+    - utils
+    - dnsesclave_roundrobind 
+
+- hosts: supervision
+  roles:
+    - utils
+#    - prometheus
+
 ...

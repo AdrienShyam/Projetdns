@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
   #  b.vm.provision "shell", path: "provision.sh", args: "client"
   end
 
-  config.vm.define "promethus", primary: true do |b|
+  config.vm.define "prometheus", primary: true do |b|
     b.vm.box = "debian/contrib-stretch64"
     b.vm.hostname = "promethus"
     b.vm.network "private_network", ip: "10.0.0.5"
@@ -77,8 +77,24 @@ Vagrant.configure("2") do |config|
      chmod -R 600 /home/vagrant/.ssh/authorized_keys
      ", privileged: false
 
-  #  b.vm.provision "shell", path: "provision.sh", args: "promethus"
+  #  b.vm.provision "shell", path: "provision.sh", args: "prometheus"
+  end
+
+  config.vm.define "dnsesclave-roundrobind", primary: true do |b|
+    b.vm.box = "debian/contrib-stretch64"
+    b.vm.hostname = "dnsesclave-roundrobind"
+    b.vm.network "private_network", ip: "10.0.0.6"
+    b.vm.network "forwarded_port", guest: 80, host: 8005
+     public_key = File.read("cle_publique")
+
+  config.vm.provision :shell, :inline =>"
+     echo 'Copying ansible-vm public SSH Keys to the VM'
+     mkdir -p /home/vagrant/.ssh
+     chmod 700 /home/vagrant/.ssh
+     echo '#{public_key}' >> /home/vagrant/.ssh/authorized_keys
+     chmod -R 600 /home/vagrant/.ssh/authorized_keys
+     ", privileged: false
+
+  #  b.vm.provision "shell", path: "provision.sh", args: "dnsesclave-roundrobind"
   end
 end
-
-

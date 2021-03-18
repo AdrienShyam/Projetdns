@@ -11,5 +11,13 @@ all:
       hosts:
         dns_esclave:
           ansible_host: 10.0.0.3
+    slave_robind:
+      hosts:
+        dnsesclave_roundrobind:
+          ansible_host: 10.0.0.6
+    supervision:
+      hosts:
+        prometheus:
+          ansible_host: 10.0.0.5
           
   
