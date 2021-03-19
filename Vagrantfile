@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "prometheus", primary: true do |b|
     b.vm.box = "debian/contrib-stretch64"
-    b.vm.hostname = "promethus"
+    b.vm.hostname = "prometheus"
     b.vm.network "private_network", ip: "10.0.0.5"
     b.vm.network "forwarded_port", guest: 80, host: 8004
      public_key = File.read("cle_publique")
