@@ -2,6 +2,7 @@
 # les enregistements et leurs ip  
 records:
   - { 'name': pc , 'ip': 10.0.0.1 }
+  - { 'name': dns , 'ip': 10.0.0.2 }
   - { 'name': dnsesclave , 'ip': 10.0.0.3 }  
   - { 'name': dnsesclave-roundrobind , 'ip': 10.0.0.6 }
 
