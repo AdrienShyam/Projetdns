@@ -1,7 +1,7 @@
 all:
   hosts:
     client:
-      ansible_host: 10.0.0.4
+      ansible_host: 10.0.0.7
   children:
     master:
       hosts:
@@ -19,5 +19,9 @@ all:
       hosts:
         prometheus:
           ansible_host: 10.0.0.5
+    save:
+      hosts:
+        sauvegarde:
+          ansible_host: 10.0.0.4
           
   
