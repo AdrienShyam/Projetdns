@@ -101,7 +101,7 @@ Vagrant.configure("2") do |config|
     b.vm.box = "debian/contrib-stretch64"
     b.vm.hostname = "client"
     b.vm.network "private_network", ip: "10.0.0.7"
-    b.vm.network "forwarded_port", guest: 80, host: 8005
+    b.vm.network "forwarded_port", guest: 80, host: 8006
      public_key = File.read("cle_publique")
 
   config.vm.provision :shell, :inline =>"
