@@ -1,5 +1,5 @@
 ---
-- name: installation de vim et dnsutils
+- name: installation de vim, dnsutils et curl
   apt:
     pkg:
     - vim
