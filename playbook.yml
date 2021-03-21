@@ -25,4 +25,8 @@
     - utils
     - prometheus
 
+- hosts: save
+  roles:
+    - utils
+    - client
 ...
