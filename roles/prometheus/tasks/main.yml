@@ -1,0 +1,159 @@
+---
+#prometeus
+
+- name: creer groupe prometheus
+  command: groupadd --system prometheus
+
+- name: creer utilisateur prometheus
+  command: useradd -s /sbin/nologin --system -g prometheus prometheus
+
+- name: creer le dossier /var/lib/prometheus
+  ansible.builtin.file: 
+    path: "/var/lib/prometheus"
+    state: directory
+
+- name: creer le dossier /tmp/prometheus
+  ansible.builtin.file: 
+    path: "/tmp/prometheus"
+    state: directory
+
+- name: ajout les fichier rules et creer le dossier /etc/prometheus
+  shell: for i in rules rules.d files_sd; do sudo mkdir -p /etc/prometheus/${i}; done
+
+- name: Extract prometheus-2.25.2.linux-amd64.tar.gz
+  ansible.builtin.unarchive:
+    src: prometheus-2.25.2.linux-amd64.tar.gz
+    dest: /tmp/prometheus
+
+- name: deplace le fichier prometheus
+  command: mv /tmp/prometheus/prometheus-2.25.2.linux-amd64/prometheus /usr/local/bin/
+
+- name: deplace le fichier promtool
+  command: mv /tmp/prometheus/prometheus-2.25.2.linux-amd64/promtool /usr/local/bin/
+
+- name: deplace le fichier prometheus.yml
+  command: mv /tmp/prometheus/prometheus-2.25.2.linux-amd64/prometheus.yml /etc/prometheus/
+
+- name: deplace le dossier consoles
+  command: mv /tmp/prometheus/prometheus-2.25.2.linux-amd64/consoles /etc/prometheus/
+
+- name: deplace le dossier console_libraries
+  command: mv /tmp/prometheus/prometheus-2.25.2.linux-amd64/console_libraries /etc/prometheus/
+
+#- name: deplace le fichier prometheus------------------------------------------------------------------------------                                         
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/tmp/prometheus/prometheus-2.25.2.linux-amd64/prometheus"
+#    dest: /usr/local/bin/
+
+#- name: deplace le fichier promtool
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/tmp/prometheus/prometheus-2.25.2.linux-amd64/promtool"
+#    dest: /usr/local/bin/
+
+#- name: deplace le fichier prometheus.yml                               le service ne fonctionne pas à cause la copie mais copie bien les fichiers et dossiers 
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/tmp/prometheus/prometheus-2.25.2.linux-amd64/prometheus.yml"
+#    dest: /etc/prometheus/
+
+#- name: deplace le dossier consoles
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/tmp/prometheus/prometheus-2.25.2.linux-amd64/consoles"
+#    dest: /etc/prometheus/
+
+#- name: deplace le dossier console_libraries
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/tmp/prometheus/prometheus-2.25.2.linux-amd64/console_libraries"
+#    dest: /etc/prometheus/-----------------------------------------------------------------------------------------
+
+- name: supprime le dossier /tmp/prometheus
+  ansible.builtin.file: 
+    path: "/tmp/prometheus"
+    state: absent
+
+- name: ajoute de prometheus.service
+  template:
+    src: "prometheus.service.j2"
+    dest: "/etc/systemd/system/prometheus.service"
+
+- name: va donner les droits du dossier /etc/prometheus à prometheus
+  shell: for i in rules rules.d files_sd; do sudo chown -R prometheus:prometheus /etc/prometheus/${i}; done
+
+- name: va donner les droits ??? (775)  du dossier /etc/prometheus à prometheus
+  shell: for i in rules rules.d files_sd; do sudo chmod -R 775 /etc/prometheus/${i}; done
+
+- name: changement de l'user root en bind 
+  ansible.builtin.file:
+    path: /var/lib/prometheus
+    state: directory 
+    owner: prometheus
+    group: prometheus
+
+- name: daemon reload
+  command: systemctl daemon-reload
+
+- name: start prometheus
+  ansible.builtin.service:
+    name: prometheus
+    state: started 
+
+- name: enable prometheus
+  ansible.builtin.service:
+    name: prometheus
+    enabled: yes
+
+- name: stop prometheus
+  ansible.builtin.service:
+    name: prometheus
+    state: stopped 
+
+- name: ajoute de prometheus.yml.j2
+  template:
+    src: "prometheus.yml.j2"
+    dest: "/etc/prometheus/prometheus.yml"
+
+- name: start prometheus
+  ansible.builtin.service:
+    name: prometheus
+    state: started 
+
+#grafana
+
+- name: install apt-transport-https
+  apt:
+    name: apt-transport-https
+
+- name: install software-properties-common 
+  apt:
+    name: software-properties-common 
+
+- name: je sais pas 
+  shell: wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+- name: echo
+  shell: echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+- name: Update apt-get repo and cache
+  apt: update_cache=yes force_apt_get=yes 
+
+- name: install grafana
+  apt:
+    name: grafana
+
+- name: daemon reload
+  command: systemctl daemon-reload
+
+- name: start grafana
+  ansible.builtin.service:
+    name: grafana-server
+    state: started 
+
+- name: enable grafana
+  ansible.builtin.service:
+    name: grafana-server
+    enabled: yes
+...

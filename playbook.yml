@@ -23,6 +23,6 @@
 - hosts: supervision
   roles:
     - utils
-#    - prometheus
+    - prometheus
 
 ...

@@ -30,4 +30,48 @@
   ansible.builtin.service:
     name: bind9
     state: restarted
+
+#bind exporter
+
+- name: installation de libxml2
+  apt:
+    name: libxml2
+
+- name: Extract bind_exporter-0.4.0.linux-amd64.tar.gz
+  ansible.builtin.unarchive:
+    src: bind_exporter-0.4.0.linux-amd64.tar.gz
+    dest: /home/vagrant 
+
+- name: deplace le bind_exporter
+  command: mv /home/vagrant/bind_exporter-0.4.0.linux-amd64/bind_exporter /usr/local/bin/
+
+#- name: deplace le fichier bind_exporter
+#  ansible.builtin.copy: 
+#    remote_src: yes
+#    src: "/home/vagrant/bind_exporter-0.4.0.linux-amd64/bind_exporter"                   le service ne fonctionne pas à cause la copie mais la copie est bien effectué 
+#    dest: /usr/local/bin/
+
+- name: creer groupe prometheus
+  command: groupadd --system prometheus
+
+- name: creer utilisateur prometheus
+  command: useradd -s /sbin/nologin --system -g prometheus prometheus
+
+- name: ajoute de bind_exporter.service
+  template:
+    src: "bind_exporter.service.j2"
+    dest: "/etc/systemd/system/bind_exporter.service"
+
+- name: daemon reload
+  command: systemctl daemon-reload
+
+- name: restart bind_exporter.service
+  ansible.builtin.service:
+    name: bind_exporter.service
+    state: restarted 
+
+- name: enable prometheus
+  ansible.builtin.service:
+    name: bind_exporter.service
+    enabled: yes
 ...
